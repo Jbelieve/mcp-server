@@ -19,7 +19,7 @@
   "homepage": "https://maasy.io",
   "repository": {
     "type": "git",
-    "url": "https://github.com/maasy-ai/mcp-server"
+    "url": "https://github.com/Jbelieve/mcp-server"
   },
   "bugs": {
     "url": "https://github.com/maasy-ai/mcp-server/issues"
