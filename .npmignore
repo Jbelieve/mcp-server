@@ -1,0 +1,10 @@
+src/
+*.ts
+tsconfig.json
+.npmignore
+
+# Lovable duplicate artifacts
+dist/*\ 2.*
+dist/*\ 3.*
+dist/*\ 4.*
+dist/*\ 5.*

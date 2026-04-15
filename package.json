@@ -1,0 +1,47 @@
+{
+  "name": "@maasy-ai/mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for Maasy AI Marketing Copilot — connect Claude to your marketing intelligence",
+  "type": "module",
+  "bin": {
+    "maasy-mcp": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "prepare": "npm run build"
+  },
+  "keywords": ["mcp", "maasy", "marketing", "ai", "copilot", "anthropic", "claude", "model-context-protocol"],
+  "license": "MIT",
+  "author": "Maasy <hola@maasy.io>",
+  "homepage": "https://maasy.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maasy-ai/mcp-server"
+  },
+  "bugs": {
+    "url": "https://github.com/maasy-ai/mcp-server/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "@supabase/supabase-js": "^2.95.3",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0",
+    "tsx": "^4.19.0",
+    "@types/node": "^22.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ]
+}
