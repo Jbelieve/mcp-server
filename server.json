@@ -1,0 +1,117 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.jbelieve/maasy",
+  "title": "Maasy — AI Marketing Copilot",
+  "description": "Connect Claude to your marketing operations in Maasy. Access brand intelligence, campaign analytics, content generation, SEO/GEO monitoring, CRM pipeline, and teachable skills — all through natural conversation.",
+  "version": "1.1.0",
+  "websiteUrl": "https://maasy.co",
+  "repository": {
+    "url": "https://github.com/Jbelieve/mcp-server",
+    "source": "github"
+  },
+  "license": "MIT",
+  "packages": [
+    {
+      "registryType": "npm",
+      "name": "@maasy-ai/mcp-server",
+      "version": "1.1.0",
+      "runtime": "node",
+      "transport": [
+        {
+          "type": "stdio",
+          "command": "npx",
+          "args": ["-y", "@maasy-ai/mcp-server"]
+        }
+      ],
+      "environmentVariables": [
+        {
+          "name": "MAASY_SUPABASE_URL",
+          "description": "Maasy API endpoint",
+          "default": "https://vdlaoswrgppbimjykugn.supabase.co",
+          "required": true
+        },
+        {
+          "name": "MAASY_API_KEY",
+          "description": "Your Maasy API key — generate at maasy.co → Settings → API Key. Starts with msy_",
+          "required": true,
+          "secret": true
+        },
+        {
+          "name": "MAASY_PROJECT_ID",
+          "description": "Default brand UUID (optional — tools use this brand automatically when set)",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "tools": [
+    {
+      "name": "maasy_list_brands",
+      "description": "List all brands in your Maasy account with health status"
+    },
+    {
+      "name": "maasy_scan_brand",
+      "description": "Deep health scan: DNA, campaigns, content, CRM, SEO, alerts"
+    },
+    {
+      "name": "maasy_get_brand_context",
+      "description": "Full brand DNA: tone, ICP, value prop, assets, references"
+    },
+    {
+      "name": "maasy_get_alerts",
+      "description": "Pending alerts: campaign anomalies, lead opportunities, content gaps"
+    },
+    {
+      "name": "maasy_get_campaign_metrics",
+      "description": "Ad performance: spend, CTR, CPC, conversions, ROAS"
+    },
+    {
+      "name": "maasy_get_crm_summary",
+      "description": "CRM pipeline: leads, contacts, opportunities, pipeline value"
+    },
+    {
+      "name": "maasy_get_content_pipeline",
+      "description": "Content status: drafts, scheduled, published"
+    },
+    {
+      "name": "maasy_get_seo_status",
+      "description": "SEO/GEO scores, keyword rankings, visibility trends"
+    },
+    {
+      "name": "maasy_generate_content",
+      "description": "Generate on-brand social content using AI"
+    },
+    {
+      "name": "maasy_discover_keywords",
+      "description": "AI keyword discovery with clusters and difficulty scores"
+    },
+    {
+      "name": "maasy_get_daily_summary",
+      "description": "Today's operations summary and recommended actions"
+    },
+    {
+      "name": "maasy_execute_action",
+      "description": "Execute actions: reports, budget, creatives, leads, diagnostics"
+    },
+    {
+      "name": "maasy_list_skills",
+      "description": "Browse all copilot knowledge skills by category"
+    },
+    {
+      "name": "maasy_get_skill",
+      "description": "Read a skill's full content and quick action pills"
+    },
+    {
+      "name": "maasy_create_skill",
+      "description": "Create new marketing knowledge (auto-generates action pills)"
+    },
+    {
+      "name": "maasy_update_skill",
+      "description": "Update skill content, category, or priority"
+    },
+    {
+      "name": "maasy_delete_skill",
+      "description": "Remove a skill permanently"
+    }
+  ]
+}
