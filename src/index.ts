@@ -331,8 +331,9 @@ server.tool(
     project_id: z.string().optional().describe("Brand UUID"),
     content: z.string().describe("Post copy / caption"),
     platform: z.enum(["instagram", "facebook", "linkedin", "twitter", "tiktok"]).describe("Target platform"),
-    scheduled_at: z.string().optional().describe("ISO 8601 datetime. Defaults to tomorrow 10am if omitted."),
+    scheduled_at: z.string().optional().describe("ISO 8601 datetime. Omit to save as draft."),
     content_type: z.enum(["post", "reel", "story", "carousel"]).optional().default("post"),
+    status: z.enum(["draft", "scheduled"]).optional().describe("'draft' to save to borradores, 'scheduled' to program. Auto-detected from scheduled_at."),
   },
   toolHandler("schedule_post")
 );
@@ -488,11 +489,11 @@ export function createSandboxServer() {
 
 // Only start the server when run directly (not when imported for scanning)
 // Works in both ESM and CJS (Smithery bundles to CJS)
-const isSandboxScan = typeof createSandboxServer !== "undefined" &&
-  !process.env.MAASY_API_KEY?.startsWith("msy_") &&
-  process.env.MAASY_API_KEY === "dummy";
+// Auth can be MAASY_API_KEY (legacy) OR MAASY_ACCESS_TOKEN (OAuth)
+const hasAuth = !!(process.env.MAASY_API_KEY || process.env.MAASY_ACCESS_TOKEN);
+const isSandboxScan = !hasAuth || process.env.MAASY_API_KEY === "dummy";
 
-if (!isSandboxScan && process.env.MAASY_API_KEY) {
+if (!isSandboxScan && hasAuth) {
   (async () => {
     initGateway();
     const transport = new StdioServerTransport();

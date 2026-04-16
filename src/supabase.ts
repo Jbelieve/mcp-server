@@ -14,10 +14,7 @@ export function initGateway() {
   const apiKey = process.env.MAASY_API_KEY;
 
   if (!base) {
-    throw new Error(
-      "Missing MAASY_SUPABASE_URL.\n" +
-      "Set it to: https://vdlaoswrgppbimjykugn.supabase.co"
-    );
+    throw new Error("Missing MAASY_SUPABASE_URL.\n" + "Set it to: https://vdlaoswrgppbimjykugn.supabase.co");
   }
 
   if (oauthToken) {
@@ -31,8 +28,8 @@ export function initGateway() {
   } else {
     throw new Error(
       "Missing authentication.\n" +
-      "Either complete the OAuth flow in MAASY → Settings → API / MCP\n" +
-      "or set MAASY_API_KEY to your API key."
+        "Either complete the OAuth flow in MAASY → Settings → API / MCP\n" +
+        "or set MAASY_API_KEY to your API key."
     );
   }
 
@@ -42,10 +39,7 @@ export function initGateway() {
 /**
  * Call a tool via the mcp-gateway edge function.
  */
-export async function callGateway(
-  tool: string,
-  args: Record<string, unknown> = {}
-): Promise<unknown> {
+export async function callGateway(tool: string, args: Record<string, unknown> = {}): Promise<unknown> {
   const res = await fetch(gatewayUrl, {
     method: "POST",
     headers: {
