@@ -46,7 +46,7 @@ function toolHandler(toolName: string, argsFn?: (args: Record<string, unknown>) 
 function createServer() {
   return new McpServer({
     name: "maasy",
-    version: "1.2.0",
+    version: "1.3.0",
     description:
       "Maasy AI Marketing Copilot — marketing intelligence, brand scanning, content generation, skill management",
     icons: [{ src: MAASY_ICON, mimeType: "image/png", sizes: ["64x64"] }],
@@ -296,6 +296,60 @@ server.tool(
 );
 
 // ═══════════════════════════════════════════════════════════════════════
+// WRITE TOOLS (4) — Create & trigger
+// ═══════════════════════════════════════════════════════════════════════
+
+server.tool(
+  "maasy_create_landing",
+  "Create a landing page in maasy from HTML. Returns a landing_id and editor_url to open in the builder.",
+  {
+    project_id: z.string().optional().describe("Brand UUID"),
+    name: z.string().describe("Landing page name, e.g. 'Captación Q2 2026'"),
+    html: z.string().describe("Full HTML content of the landing page"),
+    slug: z.string().optional().describe("URL slug (auto-generated from name if omitted)"),
+    type: z.enum(["landing", "squeeze", "sales", "webinar", "event"]).optional().default("landing"),
+  },
+  toolHandler("create_landing")
+);
+
+server.tool(
+  "maasy_generate_ads",
+  "Generate ad creatives (copy + concepts) for Meta or Google using brand DNA and a brief.",
+  {
+    project_id: z.string().optional().describe("Brand UUID"),
+    brief: z.string().describe("Campaign brief: product, objective, audience, offer"),
+    platform: z.enum(["meta", "google", "tiktok"]).optional().default("meta"),
+    count: z.number().int().min(1).max(10).optional().default(3),
+  },
+  toolHandler("generate_ads")
+);
+
+server.tool(
+  "maasy_schedule_post",
+  "Schedule a social media post in maasy. Returns post_id and scheduled time.",
+  {
+    project_id: z.string().optional().describe("Brand UUID"),
+    content: z.string().describe("Post copy / caption"),
+    platform: z.enum(["instagram", "facebook", "linkedin", "twitter", "tiktok"]).describe("Target platform"),
+    scheduled_at: z.string().optional().describe("ISO 8601 datetime. Defaults to tomorrow 10am if omitted."),
+    content_type: z.enum(["post", "reel", "story", "carousel"]).optional().default("post"),
+  },
+  toolHandler("schedule_post")
+);
+
+server.tool(
+  "maasy_trigger_workflow",
+  "Trigger a maasy workflow manually — automations, sequences, CRM flows.",
+  {
+    project_id: z.string().optional().describe("Brand UUID"),
+    workflow_id: z.string().describe("Workflow UUID (get from maasy → Workflows)"),
+    contact_id: z.string().optional().describe("Contact UUID to run the workflow for"),
+    variables: z.record(z.unknown()).optional().describe("Custom variables passed to the workflow"),
+  },
+  toolHandler("trigger_workflow")
+);
+
+// ═══════════════════════════════════════════════════════════════════════
 // RESOURCES
 // ═══════════════════════════════════════════════════════════════════════
 
@@ -443,7 +497,7 @@ if (!isSandboxScan && process.env.MAASY_API_KEY) {
     initGateway();
     const transport = new StdioServerTransport();
     await server.connect(transport);
-    console.error("🐙 Maasy MCP server running — 17 tools, 2 resources, 3 prompts");
+    console.error("🐙 Maasy MCP server running — 21 tools, 2 resources, 3 prompts");
   })().catch((err) => {
     console.error(`❌ ${err.message}`);
     process.exit(1);
