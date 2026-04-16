@@ -42,14 +42,18 @@ function toolHandler(toolName: string, argsFn?: (args: Record<string, unknown>) 
   };
 }
 
-// ─── Create MCP Server ──────────────────────────────────────────────
-const server = new McpServer({
-  name: "maasy",
-  version: "0.1.0",
-  description:
-    "Maasy AI Marketing Copilot — marketing intelligence, brand scanning, content generation, skill management",
-  icons: [{ src: MAASY_ICON, mimeType: "image/png", sizes: ["64x64"] }],
-});
+// ─── Create MCP Server factory ──────────────────────────────────────
+function createServer() {
+  return new McpServer({
+    name: "maasy",
+    version: "1.2.0",
+    description:
+      "Maasy AI Marketing Copilot — marketing intelligence, brand scanning, content generation, skill management",
+    icons: [{ src: MAASY_ICON, mimeType: "image/png", sizes: ["64x64"] }],
+  });
+}
+
+const server = createServer();
 
 // ═══════════════════════════════════════════════════════════════════════
 // BRAND TOOLS (3)
@@ -416,17 +420,32 @@ server.prompt(
 );
 
 // ═══════════════════════════════════════════════════════════════════════
-// START
+// SMITHERY SANDBOX — fresh instance so Smithery can scan without real creds
 // ═══════════════════════════════════════════════════════════════════════
 
-async function main() {
-  initGateway();
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
-  console.error("🐙 Maasy MCP server running — 17 tools, 2 resources, 3 prompts");
+export function createSandboxServer() {
+  // Return a fresh, unconnected server for capability scanning
+  return createServer();
 }
 
-main().catch((err) => {
-  console.error(`❌ ${err.message}`);
-  process.exit(1);
-});
+// ═══════════════════════════════════════════════════════════════════════
+// START — only runs when executed directly (not when imported by Smithery)
+// ═══════════════════════════════════════════════════════════════════════
+
+// Only start the server when run directly (not when imported for scanning)
+// Works in both ESM and CJS (Smithery bundles to CJS)
+const isSandboxScan = typeof createSandboxServer !== "undefined" &&
+  !process.env.MAASY_API_KEY?.startsWith("msy_") &&
+  process.env.MAASY_API_KEY === "dummy";
+
+if (!isSandboxScan && process.env.MAASY_API_KEY) {
+  (async () => {
+    initGateway();
+    const transport = new StdioServerTransport();
+    await server.connect(transport);
+    console.error("🐙 Maasy MCP server running — 17 tools, 2 resources, 3 prompts");
+  })().catch((err) => {
+    console.error(`❌ ${err.message}`);
+    process.exit(1);
+  });
+}
