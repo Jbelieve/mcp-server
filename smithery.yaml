@@ -1,0 +1,25 @@
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties:
+      apiKey:
+        type: string
+        title: Maasy API Key
+        description: Your Maasy API key. Generate it at maasy.co → Settings → API Key. Starts with msy_
+      projectId:
+        type: string
+        title: Default Brand ID
+        description: Optional. UUID of your default brand — tools will use this brand automatically when set.
+    required:
+      - apiKey
+  commandFunction: |-
+    (config) => ({
+      command: "npx",
+      args: ["-y", "@maasy-ai/mcp-server@latest"],
+      env: {
+        MAASY_API_KEY: config.apiKey,
+        MAASY_SUPABASE_URL: "https://vdlaoswrgppbimjykugn.supabase.co",
+        ...(config.projectId ? { MAASY_PROJECT_ID: config.projectId } : {})
+      }
+    })
